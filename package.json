@@ -1,0 +1,27 @@
+{
+  "name": "fetchy-js",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "author": "lorenzo.savini <lorenzo.savini92@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/isomorphic-fetch": "^0.0.34",
+    "@types/lodash": "^4.14.74",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "jest": "^20.0.4",
+    "tslint": "^5.7.0",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.5"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/babel dist --out-dir dist",
+    "lint": "tslint -c tslint.json './*.ts' './src/**/*.ts'",
+    "prepublish": "npm run build",
+    "test": "jest --config jest.config.js"
+  }
+}
