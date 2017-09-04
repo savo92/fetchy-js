@@ -1,6 +1,8 @@
 fetchy-js
 =========
 
+> This library is in active development. I suggest you to return soon!
+
 Just another AJAX/HTTP library
 Made on the top of the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API),
 polyfilled with [isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch) to run in Node.js.
@@ -12,7 +14,7 @@ to run *before* and *after* a Fetch request.
 The dist directory follows the CommonJs standard.
 
 ### From npm
-
+_Coming soon_
 
 ### From source
 
