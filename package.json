@@ -2,7 +2,7 @@
   "name": "fetchy-js",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "author": "lorenzo.savini <lorenzo.savini92@gmail.com>",
+  "author": "lorenzo.savini <fetchy-js@lorenzosavini.com>",
   "license": "MIT",
   "dependencies": {
     "@types/isomorphic-fetch": "^0.0.34",
