@@ -1,9 +1,19 @@
 {
     "defaultSeverity": "error",
     "extends": [
-        "tslint:recommended"
+        "tslint:recommended",
+        "tslint-eslint-rules",
+        "tslint-immutable"
     ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "rules": {
+        // Recommended built-in rules
+        "no-var-keyword": true,
+        "typedef": [true, "call-signature"],
+
+        // Immutability rules
+        "no-let": true,
+
+        // Functional style rules
+        "no-mixed-interface": true
+    }
 }

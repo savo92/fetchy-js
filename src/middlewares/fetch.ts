@@ -6,7 +6,10 @@ import FetchyMiddleware, {
 
 export default class FetchFakeMiddleware extends FetchyMiddleware {
 
-    public processRequest(fetchParams: IFetchParams, previousMiddleware: FetchyMiddleware) {
+    public processRequest(
+        fetchParams: IFetchParams,
+        previousMiddleware: FetchyMiddleware,
+    ): Promise<Response> {
         return previousMiddleware.processResponse(fetch(fetchParams.input, fetchParams.init));
     }
 }

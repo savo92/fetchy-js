@@ -51,7 +51,10 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
         super(config, next);
     }
 
-    public processRequest(fetchParams: IFetchParams, previousMiddleware: FetchyMiddleware) {
+    public processRequest(
+        fetchParams: IFetchParams,
+        previousMiddleware: FetchyMiddleware,
+    ): Promise<Response> {
         this.fetchParamsClone = cloneDeep(fetchParams);
         return super.processRequest(fetchParams, previousMiddleware);
     }

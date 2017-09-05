@@ -26,7 +26,7 @@ export interface IFetchyConfig {
     retry: IFetchyRetryMiddlewareConfig | boolean;
 }
 
-export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDeclaration[]) {
+export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDeclaration[]): boolean {
 
     return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration) =>
 
@@ -39,7 +39,7 @@ export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDec
 
 }
 
-function validateFetchyConfig(fetchyConfig: IFetchyConfig) {
+function validateFetchyConfig(fetchyConfig: IFetchyConfig): boolean {
 
     if (!has(fetchyConfig, "middlewares")) {
         throw new TypeError("fetchyConfig has no property 'middlewares'");
