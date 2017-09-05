@@ -13,5 +13,6 @@ module.exports = {
         "ts",
         "js",
         "json"
-    ]
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/jasmineSetup.js",
 }

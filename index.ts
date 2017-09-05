@@ -2,11 +2,13 @@ import {
     fetchy,
     FetchyMiddleware,
     IFetchyConfig,
+    IFetchyRetryMiddlewareConfig,
 } from "./src/fetchy";
 
 export {
     FetchyMiddleware,
     IFetchyConfig,
+    IFetchyRetryMiddlewareConfig,
 };
 
 /**

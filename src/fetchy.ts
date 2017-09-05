@@ -9,12 +9,16 @@ import {
     FetchyMiddleware,
 } from "./middlewares/base";
 import {
+    IFetchyRetryMiddlewareConfig,
+} from "./middlewares/retry";
+import {
     fetch,
 } from "./utils/fetch";
 
 export {
     FetchyMiddleware,
     IFetchyConfig,
+    IFetchyRetryMiddlewareConfig,
 };
 
 export const fetchy = (
@@ -25,7 +29,7 @@ export const fetchy = (
 
     if (!isNil(fetchyConfig)) {
 
-        const chain = buildChain(fetchyConfig);
+        const chain = buildChain(fetchyConfig!);
         return executeChain(chain, { input, init });
 
     }

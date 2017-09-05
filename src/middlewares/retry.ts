@@ -17,12 +17,14 @@ export interface IFetchyRetryMiddlewareConfig extends IFetchyMiddlewareConfig {
     attempts: number;
     backoff: number;
     retriableStatusCodes: ((statusCode: number) => boolean) | number[];
+    retryNetworkErrors: boolean;
 }
 
 const DEFAULT_RETRY_CONFIG: IFetchyRetryMiddlewareConfig = {
     attempts: 5,
     backoff: 2,
     retriableStatusCodes: (statusCode: number) => statusCode >= 500,
+    retryNetworkErrors: false,
 };
 
 export const getRetryMiddlewareDeclaration = (
@@ -61,31 +63,51 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
     }
 
     public processResponse(promise0: Promise<Response>): Promise<Response> {
-        return promise0.then((response: Response) => {
+        return promise0
+            .then((response: Response) => {
 
-            if (response.ok === true) {
-                return this.processNextResponse(new Promise((resolve) => {
-                    resolve(response);
-                }));
-            }
+                if (response.ok === true) {
+                    return this.processNextResponse(new Promise((resolve) => {
+                        resolve(response);
+                    }));
+                }
 
-            if (!this.isRetriableCode(response.status)) {
-                throw new Error();  // @TODO define properly failure way
-            }
+                if (!this.isRetriableCode(response.status)) {
+                    throw new Error(
+                        `Failed to fetch: request to ${response.url} failed with ${response.status}`,
+                    );
+                }
 
-            this.attemptsCount++;
-            if (this.attemptsCount >= this.config.attempts) {
-                throw new Error();  // @TODO define properly failure way
-            }
+                return this.tryToRetry(
+                    `Failed to fetch: request to ${response.url} failed ${this.attemptsCount+1} times.`
+                    + `Last HTTP status code: ${response.status}`,
+                );
 
-            return new Promise<Response>((resolve) => {
-                const seconds = Math.pow(this.config.backoff, this.attemptsCount) * 1000;
-                setTimeout(() => {
-                    this.processRequest(this.fetchParamsClone, this.previous)
-                        .then((newResponse) => resolve(newResponse));
-                }, seconds);
+            })
+            .catch((e: Error) => {
+
+                if (this.config.retryNetworkErrors === true && e.name === "FetchError") {
+                    return this.tryToRetry(
+                        `Failed to fetch: request failed ${this.attemptsCount+1} times.`
+                        + `Last error: ${e.name}: ${e.message}`,
+                    );
+                }
+                throw e;
 
             });
+    }
+
+    private tryToRetry(failureMessage: string): Promise<Response> {
+        this.attemptsCount++;
+        if (this.attemptsCount >= this.config.attempts) {
+            throw new Error(failureMessage);
+        }
+
+        return new Promise<Response>((resolve) => {
+            const seconds = Math.pow(this.config.backoff, this.attemptsCount) * 1000;
+            setTimeout(() => {
+                resolve(this.processRequest(this.fetchParamsClone, this.previous));
+            }, seconds);
 
         });
     }
@@ -99,7 +121,9 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
             return this.config.retriableStatusCodes(statusCode);
         }
 
-        throw new TypeError("Retry config property \"retriableStatusCodes\" is not an array or a function");
+        throw new TypeError(
+            "Retry config property \"retriableStatusCodes\" is not an array or a function",
+        );
     }
 
 }
