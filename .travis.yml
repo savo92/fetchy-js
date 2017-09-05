@@ -5,12 +5,10 @@ node_js:
   - "5"
   - "4"
 
+script: yarn test && yarn test-demo
+
 jobs:
   include:
     - stage: Lint
       node_js: "6"
       script: yarn lint
-    - stage: Test
-      script: yarn test
-    - stage: Test demo
-      script: yarn test-demo
