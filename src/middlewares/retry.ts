@@ -79,7 +79,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
                 }
 
                 return this.tryToRetry(
-                    `Failed to fetch: request to ${response.url} failed ${this.attemptsCount+1} times.`
+                    `Failed to fetch: request to ${response.url} failed ${this.attemptsCount + 1} times.`
                     + `Last HTTP status code: ${response.status}`,
                 );
 
@@ -88,7 +88,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
 
                 if (this.config.retryNetworkErrors === true && e.name === "FetchError") {
                     return this.tryToRetry(
-                        `Failed to fetch: request failed ${this.attemptsCount+1} times.`
+                        `Failed to fetch: request failed ${this.attemptsCount + 1} times.`
                         + `Last error: ${e.name}: ${e.message}`,
                     );
                 }

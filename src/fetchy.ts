@@ -29,7 +29,7 @@ export const fetchy = (
 
     if (!isNil(fetchyConfig)) {
 
-        const chain = buildChain(fetchyConfig!);
+        const chain = buildChain(fetchyConfig);
         return executeChain(chain, { input, init });
 
     }
