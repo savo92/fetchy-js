@@ -9,7 +9,7 @@ import {
 
 export class FetchFakeMiddleware extends FetchyMiddleware {
 
-    public processRequest(
+    public async processRequest(
         fetchParams: IFetchParams,
         previousMiddleware: FetchyMiddleware,
     ): Promise<Response> {

@@ -21,15 +21,15 @@ export {
     IFetchyRetryMiddlewareConfig,
 };
 
-export const fetchy = (
+export const fetchy = async (
     input: RequestInfo,
     init: RequestInit,
     fetchyConfig: IFetchyConfig | undefined,
 ): Promise<Response> => {
 
     if (!isNil(fetchyConfig)) {
-
         const chain = buildChain(fetchyConfig);
+
         return executeChain(chain, { input, init });
 
     }

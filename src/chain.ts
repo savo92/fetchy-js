@@ -112,7 +112,7 @@ export const buildChain = (fetchyConfig: IFetchyConfig): IFetchyChain  => {
 
 };
 
-export const executeChain = (
+export const executeChain = async (
     chain: IFetchyChain,
     fetchParams: IFetchParams,
 ): Promise<Response> => {

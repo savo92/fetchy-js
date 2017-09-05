@@ -18,7 +18,7 @@ export {
  * @param {RequestInit} init
  * @param {IFetchyConfig|undefined} fetchyConfig
  */
-export const fetch = (
+export const fetch = async (
     input: RequestInfo,
     init: RequestInit,
     fetchyConfig: IFetchyConfig | undefined,

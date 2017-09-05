@@ -27,23 +27,6 @@ const DEFAULT_RETRY_CONFIG: IFetchyRetryMiddlewareConfig = {
     retryNetworkErrors: false,
 };
 
-export const getRetryMiddlewareDeclaration = (
-    retry: IFetchyRetryMiddlewareConfig | boolean,
-): IFetchyMiddlewareDeclaration | null => {
-
-    if (retry === false) {
-        return null;
-    }
-
-    const config = retry === true ? DEFAULT_RETRY_CONFIG : retry;
-    return {
-        // tslint:disable-next-line no-any
-        class: (FetchyRetryMiddleware as any),  // Sorry
-        config,
-    };
-
-};
-
 export class FetchyRetryMiddleware extends FetchyMiddleware {
     protected config: IFetchyRetryMiddlewareConfig;
     private attemptsCount = 0;
@@ -54,19 +37,20 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
         super(config, next);
     }
 
-    public processRequest(
+    public async processRequest(
         fetchParams: IFetchParams,
         previousMiddleware: FetchyMiddleware | null,
     ): Promise<Response> {
         this.fetchParamsClone = cloneDeep(fetchParams);
+
         return super.processRequest(fetchParams, previousMiddleware);
     }
 
-    public processResponse(promise0: Promise<Response>): Promise<Response> {
+    public async processResponse(promise0: Promise<Response>): Promise<Response> {
         return promise0
-            .then((response: Response) => {
+            .then(async (response: Response) => {
 
-                if (response.ok === true) {
+                if (response.ok) {
                     return this.processNextResponse(new Promise((resolve) => {
                         resolve(response);
                     }));
@@ -84,9 +68,9 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
                 );
 
             })
-            .catch((e: Error) => {
+            .catch(async (e: Error) => {
 
-                if (this.config.retryNetworkErrors === true && e.name === "FetchError") {
+                if (this.config.retryNetworkErrors && e.name === "FetchError") {
                     return this.tryToRetry(
                         `Failed to fetch: request failed ${this.attemptsCount + 1} times.`
                         + `Last error: ${e.name}: ${e.message}`,
@@ -97,7 +81,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
             });
     }
 
-    private tryToRetry(failureMessage: string): Promise<Response> {
+    private async tryToRetry(failureMessage: string): Promise<Response> {
         this.attemptsCount++;
         if (this.attemptsCount >= this.config.attempts) {
             throw new Error(failureMessage);
@@ -127,3 +111,21 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
     }
 
 }
+
+export const getRetryMiddlewareDeclaration = (
+    retry: IFetchyRetryMiddlewareConfig | boolean,
+): IFetchyMiddlewareDeclaration | null => {
+
+    if (retry === false) {
+        return null;
+    }
+
+    const config = retry === true ? DEFAULT_RETRY_CONFIG : retry;
+
+    return {
+        // tslint:disable-next-line no-any
+        class: (FetchyRetryMiddleware as any),  // Sorry
+        config,
+    };
+
+};
