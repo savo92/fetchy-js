@@ -12,3 +12,5 @@ jobs:
       script: yarn lint
     - stage: Test
       script: yarn test
+    - stage: Test demo
+      script: yarn test-demo

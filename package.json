@@ -35,7 +35,8 @@
     "lint": "tslint --project tsconfig.json -c tslint.json './*.ts' './src/**/*.ts'",
     "prepublish": "npm run build",
     "test": "jest --config jest.config.js",
-    "test:watch": "jest --config jest.config.js --watch"
+    "test:watch": "jest --config jest.config.js --watch",
+    "test-demo": "npm run build && node demo/basic.js"
   },
   "engines": {
     "node": ">=4.6.2",
