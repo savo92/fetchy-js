@@ -54,7 +54,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
 
     public processRequest(
         fetchParams: IFetchParams,
-        previousMiddleware: FetchyMiddleware,
+        previousMiddleware: FetchyMiddleware | null,
     ): Promise<Response> {
         this.fetchParamsClone = cloneDeep(fetchParams);
         return super.processRequest(fetchParams, previousMiddleware);
@@ -98,6 +98,8 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
         if (isFunction(this.config.retriableStatusCodes)) {
             return this.config.retriableStatusCodes(statusCode);
         }
+
+        throw new TypeError("Retry config property \"retriableStatusCodes\" is not an array or a function");
     }
 
 }

@@ -36,7 +36,7 @@ export abstract class FetchyMiddleware implements IFetchyMiddleware {
 
     public processRequest(
         fetchParams: IFetchParams,
-        previousMiddleware: FetchyMiddleware,
+        previousMiddleware: FetchyMiddleware | null,
     ): Promise<Response> {
 
         this.previous = previousMiddleware;
