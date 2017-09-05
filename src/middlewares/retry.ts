@@ -6,9 +6,9 @@ import {
     isUndefined,
 } from "lodash";
 
-import FetchyMiddleware, {
+import {
+    FetchyMiddleware,
     IFetchParams,
-    IFetchyMiddleware,
     IFetchyMiddlewareConfig,
     IFetchyMiddlewareDeclaration,
 } from "./base";
@@ -25,9 +25,9 @@ const DEFAULT_RETRY_CONFIG: IFetchyRetryMiddlewareConfig = {
     retriableStatusCodes: (statusCode: number) => statusCode >= 500,
 };
 
-export function getRetryMiddlewareDeclaration(
+export const getRetryMiddlewareDeclaration = (
     retry: IFetchyRetryMiddlewareConfig | boolean,
-): IFetchyMiddlewareDeclaration {
+): IFetchyMiddlewareDeclaration | null => {
 
     if (retry === false) {
         return null;
@@ -35,11 +35,12 @@ export function getRetryMiddlewareDeclaration(
 
     const config = retry === true ? DEFAULT_RETRY_CONFIG : retry;
     return {
+        // tslint:disable-next-line no-any
         class: (FetchyRetryMiddleware as any),  // Sorry
         config,
     };
 
-}
+};
 
 export class FetchyRetryMiddleware extends FetchyMiddleware {
     protected config: IFetchyRetryMiddlewareConfig;

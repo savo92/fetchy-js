@@ -7,26 +7,27 @@ import {
     reverse,
 } from "lodash";
 
-import FetchyMiddleware, {
+import {
+    FetchyMiddleware,
     IFetchParams,
     IFetchyChain,
     IFetchyMiddleware,
     IFetchyMiddlewareDeclaration,
 } from "./middlewares/base";
-
+import { FetchFakeMiddleware } from "./middlewares/fetch";
 import {
     getRetryMiddlewareDeclaration,
     IFetchyRetryMiddlewareConfig,
 } from "./middlewares/retry";
-
-import FetchFakeMiddleware from "./middlewares/fetch";
 
 export interface IFetchyConfig {
     middlewares: IFetchyMiddlewareDeclaration[];
     retry: IFetchyRetryMiddlewareConfig | boolean;
 }
 
-export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDeclaration[]): boolean {
+export const validateMiddlewareDeclarations = (
+    middlewares: IFetchyMiddlewareDeclaration[],
+): boolean => {
 
     return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration) =>
 
@@ -37,9 +38,9 @@ export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDec
 
     ));
 
-}
+};
 
-function validateFetchyConfig(fetchyConfig: IFetchyConfig): boolean {
+const validateFetchyConfig = (fetchyConfig: IFetchyConfig): boolean => {
 
     if (!has(fetchyConfig, "middlewares")) {
         throw new TypeError("fetchyConfig has no property 'middlewares'");
@@ -47,13 +48,13 @@ function validateFetchyConfig(fetchyConfig: IFetchyConfig): boolean {
 
     return validateMiddlewareDeclarations(fetchyConfig.middlewares);
 
-}
+};
 
-function instanceFetchyMiddleware(
+const instanceFetchyMiddleware = (
     middlewareClass,
     middlewareConfig,
     nextRing,
-): IFetchyMiddleware {
+): IFetchyMiddleware => {
 
     if (nextRing === null) {
         nextRing = new FetchFakeMiddleware({}, null);
@@ -64,13 +65,13 @@ function instanceFetchyMiddleware(
         nextRing,
     );
 
-}
+};
 
-function buildChainRings(
+const buildChainRings = (
     middlewareDeclaration: IFetchyMiddlewareDeclaration,
-    nextRing: IFetchyMiddleware,
+    nextRing: IFetchyMiddleware | null,
     remainingMiddlewareDeclarations: IFetchyMiddlewareDeclaration[],
-): IFetchyMiddleware {
+): IFetchyMiddleware => {
 
     const ring = instanceFetchyMiddleware(
         middlewareDeclaration.class,
@@ -80,7 +81,7 @@ function buildChainRings(
 
     if (remainingMiddlewareDeclarations.length > 0) {
         return buildChainRings(
-            first(remainingMiddlewareDeclarations),
+            first(remainingMiddlewareDeclarations)!,
             ring,
             drop(remainingMiddlewareDeclarations, 1),
         );
@@ -88,9 +89,9 @@ function buildChainRings(
 
     return ring;
 
-}
+};
 
-export function buildChain(fetchyConfig: IFetchyConfig): IFetchyChain {
+export const buildChain = (fetchyConfig: IFetchyConfig): IFetchyChain  => {
 
     validateFetchyConfig(fetchyConfig);
 
@@ -109,8 +110,12 @@ export function buildChain(fetchyConfig: IFetchyConfig): IFetchyChain {
         ),
     };
 
-}
+};
 
-export function executeChain(chain: IFetchyChain, fetchParams: IFetchParams): Promise<Response> {
+export const executeChain = (
+    chain: IFetchyChain,
+    fetchParams: IFetchParams,
+): Promise<Response> => {
+
     return chain.start.processRequest(fetchParams, null);
-}
+};

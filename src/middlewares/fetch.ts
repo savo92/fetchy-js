@@ -1,10 +1,11 @@
 import "isomorphic-fetch";
 
-import FetchyMiddleware, {
+import {
+    FetchyMiddleware,
     IFetchParams,
 } from "./base";
 
-export default class FetchFakeMiddleware extends FetchyMiddleware {
+export class FetchFakeMiddleware extends FetchyMiddleware {
 
     public processRequest(
         fetchParams: IFetchParams,

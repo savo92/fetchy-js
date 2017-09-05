@@ -15,7 +15,7 @@ export interface IFetchyChain {
 }
 
 export interface IFetchyMiddleware {
-    processRequest: (fetchParams: IFetchParams, previousMiddleware: FetchyMiddleware) => Promise<Response>;
+    processRequest: (fetchParams: IFetchParams, previousMiddleware: FetchyMiddleware | null) => Promise<Response>;
     processResponse: (response: Promise<Response>) => Promise<Response>;
 }
 
@@ -24,9 +24,9 @@ export interface IFetchyMiddlewareDeclaration {
     config: IFetchyMiddlewareConfig;
 }
 
-export default abstract class FetchyMiddleware implements IFetchyMiddleware {
+export abstract class FetchyMiddleware implements IFetchyMiddleware {
     protected readonly config: IFetchyMiddlewareConfig;
-    protected readonly next: FetchyMiddleware;
+    protected readonly next: FetchyMiddleware | null;
     protected previous: FetchyMiddleware | null;
 
     constructor(config: IFetchyMiddlewareConfig, nextMiddleware: FetchyMiddleware | null) {
@@ -34,13 +34,17 @@ export default abstract class FetchyMiddleware implements IFetchyMiddleware {
         this.next = nextMiddleware;
     }
 
-    public processRequest(fetchParams: IFetchParams, previousMiddleware: FetchyMiddleware): Promise<Response> {
+    public processRequest(
+        fetchParams: IFetchParams,
+        previousMiddleware: FetchyMiddleware,
+    ): Promise<Response> {
+
         this.previous = previousMiddleware;
-        return this.next.processRequest(fetchParams, this);
+        return this.next!.processRequest(fetchParams, this);
     }
 
     public processResponse(promise0: Promise<Response>): Promise<Response> {
-        return this.previous.processResponse(promise0);
+        return this.processNextResponse(promise0);
     }
 
     protected processNextResponse(promise: Promise<Response>): Promise<Response> {

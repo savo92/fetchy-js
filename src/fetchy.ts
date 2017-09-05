@@ -9,11 +9,11 @@ export {
     IFetchyConfig,
 };
 
-export function fetchy(
+export const fetchy = (
     input: RequestInfo,
     init: RequestInit,
     fetchyConfig: IFetchyConfig | undefined,
-): Promise<Response> {
+): Promise<Response> => {
 
     if (!isNil(fetchyConfig)) {
 
@@ -24,4 +24,4 @@ export function fetchy(
 
     return fetch(input, init);
 
-}
+};

@@ -13,12 +13,12 @@ export {
  * @param {RequestInit} init
  * @param {IFetchyConfig|undefined} fetchyConfig
  */
-export function fetch(
+export const fetch = (
     input: RequestInfo,
     init: RequestInit,
     fetchyConfig: IFetchyConfig | undefined,
-): Promise<Response> {
+): Promise<Response>  => {
 
     return fetchy(input, init, fetchyConfig);
 
-}
+};
