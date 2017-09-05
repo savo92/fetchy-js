@@ -6,10 +6,14 @@ import {
     IFetchyConfig,
 } from "./chain";
 import {
+    FetchyMiddleware,
+} from "./middlewares/base";
+import {
     fetch,
 } from "./utils/fetch";
 
 export {
+    FetchyMiddleware,
     IFetchyConfig,
 };
 

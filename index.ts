@@ -1,9 +1,11 @@
 import {
     fetchy,
+    FetchyMiddleware,
     IFetchyConfig,
 } from "./src/fetchy";
 
 export {
+    FetchyMiddleware,
     IFetchyConfig,
 };
 
