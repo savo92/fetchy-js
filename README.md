@@ -37,6 +37,7 @@ Or... you can use our middlewares (or write your own!)
 Middlewares are just simple classes which extend `FetchyMiddleware` and should provide two methods:
 - processRequest
 - processResponse
+
 Middlewares are resolved from the first to the last _when processing the request_, and from the last to
 the first _when processing the response_.
 
@@ -83,7 +84,8 @@ The config object has 3 properties:
 _coming soon_
 
 ## Demo
-You can find a demo project here: https://github.com/savo92/demo-fetchy-js
+You can find a JS (with webpack) demo project here: https://github.com/savo92/demo-fetchy-js.
+Or a Node.js demo inside the `demo/` dir of this repository
 
 ## License
 This library is licensed under the MIT license.
