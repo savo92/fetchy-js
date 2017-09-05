@@ -1,2 +1,7 @@
 src/
 tests/
+demo/
+*.log
+.travis.yml
+jest.config.js
+tslint.json
