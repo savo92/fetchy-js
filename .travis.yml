@@ -5,9 +5,6 @@ node_js:
   - "5"
   - "4"
 
-cache:
-  yarn: true
-
 jobs:
   include:
     - stage: Lint
@@ -16,4 +13,3 @@ jobs:
     - stage: Test
       node_js: "6"
       script: yarn test
-
