@@ -1,9 +1,13 @@
 import { isNil } from "lodash";
+
 import {
     buildChain,
     executeChain,
+    IFetchyConfig,
 } from "./chain";
-import { IFetchyConfig } from "./chain";
+import {
+    fetch,
+} from "./utils/fetch";
 
 export {
     IFetchyConfig,
@@ -22,6 +26,7 @@ export const fetchy = (
 
     }
 
+    // In the case that fetchyConfig is missing, just call fetch
     return fetch(input, init);
 
 };

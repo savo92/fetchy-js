@@ -1,4 +1,6 @@
-import "isomorphic-fetch";
+import {
+    fetch,
+} from "../utils/fetch";
 
 import {
     FetchyMiddleware,

@@ -8,6 +8,7 @@ export {
 };
 
 /**
+ * The Fetchy API.
  *
  * @param {RequestInfo} input
  * @param {RequestInit} init
