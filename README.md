@@ -1,4 +1,6 @@
 # fetchy-js
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/savo92/fetchy-js.svg)](https://greenkeeper.io/)
 > Just another AJAX/HTTP library
 
 [![Build Status](https://travis-ci.org/savo92/fetchy-js.svg?branch=master)](https://travis-ci.org/savo92/fetchy-js)
