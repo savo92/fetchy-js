@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - "7"
+  - "6"
+  - "5"
+  - "4"
+
+cache:
+  yarn: true
+
+jobs:
+  include:
+    - stage: Lint
+      node_js: "6"
+      script: yarn lint
+    - stage: Test
+      node_js: "6"
+      script: yarn test
+

@@ -26,7 +26,7 @@ export interface IFetchyConfig {
     retry: IFetchyRetryMiddlewareConfig | boolean;
 }
 
-function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDeclaration[]) {
+export function validateMiddlewareDeclarations(middlewares: IFetchyMiddlewareDeclaration[]) {
 
     return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration) =>
 

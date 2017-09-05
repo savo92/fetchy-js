@@ -1,6 +1,8 @@
 # fetchy-js
 > Just another AJAX/HTTP library
 
+[![Build Status](https://travis-ci.org/savo92/fetchy-js.svg?branch=master)](https://travis-ci.org/savo92/fetchy-js)
+
 **This library is in active development. I suggest you to return soon!**
 
 Made on the top of the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API),
