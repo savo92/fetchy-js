@@ -46,7 +46,7 @@ To setup the middlewares chain, you just need to configure it by filling the `mi
 param `fetchyConfig`.
 The `middlewares` array is parsed in an ordered way, so to define your own order, just sort the middleware declarations.
 That arrat is composed by "declarations". A declaration contains 2 property:
-- `class` the middleare class, which should extend `FetchyMiddleware`. it's used by fetchy to instantiate the middlware instance.
+- `class` the middleare class, which should extend `FetchyMiddleware`. it's used by fetchy-js to instantiate the middlware instance.
 - `config` an object with the configurations for the middleware.
 * All the middlewares are configured in this way. The only exception is the retry one, which is a special middleware.
 
@@ -89,6 +89,28 @@ You need to implement `processResponse` if you want to run something _after_ the
 You can read the response body but you MUST copy the Response object to not consume the stream.
 To continue the middlewares chain, just
 `return this.processNextResponse(<a promise which will resolve by returning Response>);`
+
+## Fetch standard
+fetchy-js is not 100% [Fetch](https://fetch.spec.whatwg.org/)-compliant.
+When the retry middleware is enabled and [Response.ok](https://developer.mozilla.org/en-US/docs/Web/API/Response/ok)
+=== false, the middleware throws a TypeError.
+
+_I'll try to make fetchy-js as compliant as possible.
+Probably, I'll modify the logic to throw a custom Error when Response.ok === false and, to be Fetch-compliant,
+I'll create a special middleware which will convert this custom Error in a Response object, such as Fetch does
+when the status code isn't between 200-299 (but, when the retry logic is enabled, the last Response is returned)._
+
+fetchy-js uses isomorphic-fetch, which uses:
+- [node-fetch](https://github.com/bitinn/node-fetch/) on server side
+- [GitHub's WHATWG Fetch polyfill](https://github.com/github/fetch) on browsers
+
+### GitHub's WHATWG Fetch polyfill
+Officially, GitHub's WHATWG Fetch polyfill is a polyfill that implements a subset of the standard Fetch specification
+
+### node-fetch
+node-fetch also isn't 100% Fetch specification-compliant.
+There's a list of [known differences](https://github.com/bitinn/node-fetch/blob/master/LIMITS.md)
+One of the main differences is that node-fetch throws custom FetchError. fetchy-js is hiding this difference by returning `TypeError` as the Fetch specification says.
 
 ## License
 This library is licensed under the MIT license.
