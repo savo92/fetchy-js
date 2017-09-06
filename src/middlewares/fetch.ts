@@ -1,6 +1,4 @@
-import {
-    fetch,
-} from "../utils/fetch";
+import * as fetchUtils from "../utils/fetch";
 
 import {
     FetchyMiddleware,
@@ -13,6 +11,10 @@ export class FetchFakeMiddleware extends FetchyMiddleware {
         fetchParams: IFetchParams,
         previousMiddleware: FetchyMiddleware,
     ): Promise<Response> {
-        return previousMiddleware.processResponse(fetch(fetchParams.input, fetchParams.init));
+
+        return  previousMiddleware.processResponse(
+            fetchUtils.customFetch(fetchParams.input, fetchParams.init),
+        );
     }
+
 }

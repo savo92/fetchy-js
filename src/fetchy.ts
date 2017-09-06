@@ -12,7 +12,7 @@ import {
     IFetchyRetryMiddlewareConfig,
 } from "./middlewares/retry";
 import {
-    fetch,
+    customFetch,
 } from "./utils/fetch";
 
 export {
@@ -35,6 +35,6 @@ export const fetchy = async (
     }
 
     // In the case that fetchyConfig is missing, just call fetch
-    return fetch(input, init);
+    return customFetch(input, init);
 
 };

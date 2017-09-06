@@ -27,6 +27,14 @@ const DEFAULT_RETRY_CONFIG: IFetchyRetryMiddlewareConfig = {
     retryNetworkErrors: false,
 };
 
+class FatalError extends Error {
+    constructor(message) {
+        super(message);
+        Object.setPrototypeOf(this, FatalError.prototype);
+        this.stack = (new Error(message)).stack;
+    }
+}
+
 export class FetchyRetryMiddleware extends FetchyMiddleware {
     protected config: IFetchyRetryMiddlewareConfig;
     private attemptsCount = 0;
@@ -57,24 +65,32 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
                 }
 
                 if (!this.isRetriableCode(response.status)) {
-                    throw new Error(
+                    throw new FatalError(
                         `Failed to fetch: request to ${response.url} failed with ${response.status}`,
                     );
                 }
 
                 return this.tryToRetry(
                     `Failed to fetch: request to ${response.url} failed ${this.attemptsCount + 1} times.`
-                    + `Last HTTP status code: ${response.status}`,
+                    + ` Last HTTP status code: ${response.status}`,
                 );
 
             })
-            .catch(async (e: Error) => {
+            .catch(async (e: FatalError | TypeError) => {
 
-                if (this.config.retryNetworkErrors && e.name === "FetchError") {
+                if (this.config.retryNetworkErrors && e instanceof TypeError) {
                     return this.tryToRetry(
                         `Failed to fetch: request failed ${this.attemptsCount + 1} times.`
-                        + `Last error: ${e.name}: ${e.message}`,
+                        + ` Last error: ${e.name}: ${e.message}`,
                     );
+                }
+                throw e;
+
+            })
+            .catch(async (e: FatalError | TypeError) => {
+
+                if (e instanceof FatalError) {
+                    Object.setPrototypeOf(e, TypeError.prototype);
                 }
                 throw e;
 
@@ -84,7 +100,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
     private async tryToRetry(failureMessage: string): Promise<Response> {
         this.attemptsCount++;
         if (this.attemptsCount >= this.config.attempts) {
-            throw new Error(failureMessage);
+            throw new FatalError(failureMessage);
         }
 
         return new Promise<Response>((resolve) => {

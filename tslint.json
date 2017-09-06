@@ -12,6 +12,7 @@
         "deprecation": true,
         "eofline": true,
         "linebreak-style": [true, "LF"],
+        "max-classes-per-file": false,
         "member-access": true,
         "newline-before-return": true,
         "no-any": true,

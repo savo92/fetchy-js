@@ -6,7 +6,7 @@ import {
 describe("Test retry logic", () => {
 
     test("Failure with client error", () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
         const retryConfig: IFetchyRetryMiddlewareConfig = {
             attempts: 4,
@@ -15,12 +15,15 @@ describe("Test retry logic", () => {
             retryNetworkErrors: false,
         };
         return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: retryConfig })
-            .catch((e) => expect(e.message).toMatch(/failed 4 times/));
+            .catch((e) => {
+                expect(e.message).toMatch(/failed 4 times/);
+                expect(e.name).toMatch("TypeError");
+            });
 
     });
 
     test("Failure with network error", () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
         const retryConfig: IFetchyRetryMiddlewareConfig = {
             attempts: 4,
@@ -29,7 +32,34 @@ describe("Test retry logic", () => {
             retryNetworkErrors: true,
         };
         return fetchy("http://something.ext", {}, { middlewares: [], retry: retryConfig })
-            .catch((e) => expect(e.message).toMatch(/failed 4 times/));
+            .catch((e) => {
+                expect(e.message).toMatch(/failed 4 times/);
+                expect(e.name).toMatch("TypeError");
+            });
+
+    });
+
+});
+
+describe("Default retry configuration", () => {
+
+    test("Failure with client error", () => {
+        expect.assertions(2);
+        return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: true })
+            .catch((e) => {
+                expect(e.message).toMatch(/failed with 404/);
+                expect(e.name).toMatch("TypeError");
+            });
+
+    });
+
+    test("Failure with network error", () => {
+        expect.assertions(1);
+
+        return fetchy("http://something.ext", {}, { middlewares: [], retry: true })
+            .catch((e) => {
+                expect(e.name).toMatch("TypeError");
+            });
 
     });
 
