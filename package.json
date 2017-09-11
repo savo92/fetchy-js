@@ -1,7 +1,8 @@
 {
   "name": "fetchy-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.js",
+  "types": "dist/indes.d.ts",
   "author": "lorenzo.savini <fetchy-js@lorenzosavini.com>",
   "repository": {
     "type": "git",
