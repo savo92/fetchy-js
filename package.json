@@ -1,6 +1,6 @@
 {
   "name": "fetchy-js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/index.js",
   "types": "dist/indes.d.ts",
   "author": "lorenzo.savini <fetchy-js@lorenzosavini.com>",

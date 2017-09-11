@@ -1,6 +1,4 @@
-src/
-index.ts
-tests/
+__tests__/
 demo/
 *.log
 .travis.yml
