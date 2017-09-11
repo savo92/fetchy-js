@@ -30,11 +30,12 @@ export const fetchy = async (
     if (!isNil(fetchyConfig)) {
         const chain = buildChain(fetchyConfig);
 
-        return executeChain(chain, { input, init });
-
+        if (chain !== null) {
+            return executeChain(chain, { input, init });
+        }
     }
 
-    // In the case that fetchyConfig is missing, just call fetch
+    // In the case that fetchyConfig is missing or chain is null, just call fetch
     return customFetch(input, init);
 
 };

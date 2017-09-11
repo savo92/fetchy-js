@@ -3,6 +3,7 @@ import {
     every,
     first,
     has,
+    isNil,
     map,
     reverse,
 } from "lodash";
@@ -21,7 +22,7 @@ import {
 } from "./middlewares/retry";
 
 export interface IFetchyConfig {
-    middlewares: IFetchyMiddlewareDeclaration[];
+    middlewares?: IFetchyMiddlewareDeclaration[];
     retry: IFetchyRetryMiddlewareConfig | boolean;
 }
 
@@ -40,14 +41,15 @@ export const validateMiddlewareDeclarations = (
 
 };
 
-const validateFetchyConfig = (fetchyConfig: IFetchyConfig): boolean => {
+const validateFetchyConfig = (fetchyConfig: IFetchyConfig): IFetchyMiddlewareDeclaration[] | null => {
 
-    if (!has(fetchyConfig, "middlewares")) {
-        throw new TypeError("fetchyConfig has no property 'middlewares'");
+    if (isNil(fetchyConfig.middlewares)) {
+        return [];
     }
 
-    return validateMiddlewareDeclarations(fetchyConfig.middlewares);
-
+    return validateMiddlewareDeclarations(fetchyConfig.middlewares)
+        ? fetchyConfig.middlewares
+        : null;
 };
 
 const instanceFetchyMiddleware = (
@@ -91,14 +93,20 @@ const buildChainRings = (
 
 };
 
-export const buildChain = (fetchyConfig: IFetchyConfig): IFetchyChain  => {
+export const buildChain = (fetchyConfig: IFetchyConfig): IFetchyChain | null  => {
 
-    validateFetchyConfig(fetchyConfig);
+    const middlewareDeclarations = validateFetchyConfig(fetchyConfig);
+    if (middlewareDeclarations === null) {
+        throw new Error("middlewares object is not valid");
+    }
 
-    const middlewareDeclarations = fetchyConfig.middlewares;
     const retryMiddlewareDeclaration = getRetryMiddlewareDeclaration(fetchyConfig.retry);
     if (retryMiddlewareDeclaration !== null) {
         middlewareDeclarations.push(retryMiddlewareDeclaration);
+    }
+
+    if (middlewareDeclarations.length === 0) {
+        return null;
     }
     const reversedMiddlewareDeclarations = reverse(middlewareDeclarations);
 
