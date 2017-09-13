@@ -2,6 +2,7 @@ import {
     fetchy,
     IFetchyRetryMiddlewareConfig,
 } from "../src/fetchy";
+import { FetchyError } from "../src/utils/error";
 
 describe("Test retry logic", () => {
 
@@ -14,10 +15,11 @@ describe("Test retry logic", () => {
             retriableStatusCodes: (statusCode: number) => statusCode >= 400 && statusCode < 500,
             retryNetworkErrors: false,
         };
+
         return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: retryConfig })
             .catch((e) => {
-                expect(e.message).toMatch(/failed 4 times/);
-                expect(e.name).toMatch("TypeError");
+                expect(e.message).toMatch("Too many failures.");
+                expect(e).toBeInstanceOf(FetchyError);
             });
 
     });
@@ -31,10 +33,11 @@ describe("Test retry logic", () => {
             retriableStatusCodes: (statusCode: number) => statusCode > 599,
             retryNetworkErrors: true,
         };
+
         return fetchy("http://something.ext", {}, { middlewares: [], retry: retryConfig })
             .catch((e) => {
-                expect(e.message).toMatch(/failed 4 times/);
-                expect(e.name).toMatch("TypeError");
+                expect(e.message).toMatch("Too many failures.");
+                expect(e).toBeInstanceOf(FetchyError);
             });
 
     });
@@ -45,10 +48,11 @@ describe("Default retry configuration", () => {
 
     test("Failure with client error", () => {
         expect.assertions(2);
+
         return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: true })
             .catch((e) => {
-                expect(e.message).toMatch(/failed with 404/);
-                expect(e.name).toMatch("TypeError");
+                expect(e.message).toMatch("Fetch request failed with status 404");
+                expect(e).toBeInstanceOf(FetchyError);
             });
 
     });
@@ -58,7 +62,7 @@ describe("Default retry configuration", () => {
 
         return fetchy("http://something.ext", {}, { middlewares: [], retry: true })
             .catch((e) => {
-                expect(e.name).toMatch("TypeError");
+                expect(e).toBeInstanceOf(FetchyError);
             });
 
     });

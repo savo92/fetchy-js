@@ -2,23 +2,28 @@
 
 import "isomorphic-fetch";
 
-/*
-isomorphic-fecth uses node-fetch, which is not following
-the window.Fetch standard (which is for browsers).
-Instead, node-fetch raises FetchError.
-*/
-export type FetchError = Error;
+import { FetchError, FetchyError } from "./error";
 
-export const castToTypeError = (error: FetchError | TypeError | Error) => {
-    // @TODO consider to use the FetchError stack
-    Object.setPrototypeOf(error, TypeError.prototype);
-    error.name = TypeError.prototype.name;
-
-    return error;
-};
-
-export const customFetch = async (input: RequestInfo, init: RequestInit) =>
+export const customFetch = async (input: RequestInfo, init?: RequestInit) =>
     fetch(input, init)
-        .catch((e: FetchError | TypeError) => {
-            throw castToTypeError(e);
+        .then((response: Response): Response => {
+            if (!response.ok) {
+                throw new FetchyError(
+                    `Fetch request failed with status ${response.status}`,
+                    [response],
+                );
+            }
+
+            return response;
+        })
+        .catch((error: FetchyError | FetchError | TypeError) => {
+            if (error instanceof FetchyError) {
+                throw error;
+            }
+
+            throw new FetchyError(
+                "An error has been catched",
+                undefined,
+                [error],
+            );
         });

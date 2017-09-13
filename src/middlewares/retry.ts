@@ -4,8 +4,10 @@ import {
     isArray,
     isFunction,
     isUndefined,
+    merge,
 } from "lodash";
 
+import { FetchyError } from "../utils/error";
 import {
     FetchyMiddleware,
     IFetchParams,
@@ -27,18 +29,12 @@ const DEFAULT_RETRY_CONFIG: IFetchyRetryMiddlewareConfig = {
     retryNetworkErrors: false,
 };
 
-class FatalError extends Error {
-    constructor(message) {
-        super(message);
-        Object.setPrototypeOf(this, FatalError.prototype);
-        this.stack = (new Error(message)).stack;
-    }
-}
-
 export class FetchyRetryMiddleware extends FetchyMiddleware {
     protected config: IFetchyRetryMiddlewareConfig;
     private attemptsCount = 0;
     private fetchParamsClone: IFetchParams;
+    private failedResponses: Response[] = [];
+    private errors: Error[] = [];
 
     constructor(config: IFetchyRetryMiddlewareConfig, next) {
         // @TODO missing "config" validation
@@ -57,59 +53,51 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
     public async processResponse(promise0: Promise<Response>): Promise<Response> {
         return promise0
             .then(async (response: Response) => {
-
-                if (response.ok) {
-                    return this.processNextResponse(new Promise((resolve) => {
-                        resolve(response);
-                    }));
+                if (!response.ok) {
+                    throw new Error("The request is failed. This shouldn't happen.");
                 }
 
-                if (!this.isRetriableCode(response.status)) {
-                    throw new FatalError(
-                        `Failed to fetch: request to ${response.url} failed with ${response.status}`,
-                    );
-                }
-
-                return this.tryToRetry(
-                    `Failed to fetch: request to ${response.url} failed ${this.attemptsCount + 1} times.`
-                    + ` Last HTTP status code: ${response.status}`,
-                );
-
+                return this.processNextResponse(new Promise((resolve) => {
+                    resolve(response);
+                }));
             })
-            .catch(async (e: FatalError | TypeError) => {
+            .catch(async (e: FetchyError) => {
 
-                if (this.config.retryNetworkErrors && e instanceof TypeError) {
-                    return this.tryToRetry(
-                        `Failed to fetch: request failed ${this.attemptsCount + 1} times.`
-                        + ` Last error: ${e.name}: ${e.message}`,
+                const canRetry = e instanceof FetchyError
+                    && (
+                        e.hasErrors()
+                        || (e.hasResponses() && this.isRetriableCode(e.response.status))
                     );
-                }
-                throw e;
 
-            })
-            .catch(async (e: FatalError | TypeError) => {
+                if (canRetry) {
 
-                if (e instanceof FatalError) {
-                    Object.setPrototypeOf(e, TypeError.prototype);
+                    if (e.hasErrors()) {
+                        this.errors = merge(this.errors, e.errors);
+                    }
+                    if (e.hasResponses()) {
+                        this.failedResponses = merge(this.failedResponses, e.responses);
+                    }
+
+                    this.attemptsCount++;
+                    if (this.attemptsCount >= this.config.attempts) {
+                        throw new FetchyError(
+                            "Too many failures.",
+                            this.failedResponses,
+                            this.errors,
+                        );
+                    }
+
+                    return new Promise<Response>((resolve) => {
+                        const seconds = Math.pow(this.config.backoff, this.attemptsCount) * 1000;
+                        setTimeout(() => {
+                            resolve(this.processRequest(this.fetchParamsClone, this.previous));
+                        }, seconds);
+                    });
+
                 }
                 throw e;
 
             });
-    }
-
-    private async tryToRetry(failureMessage: string): Promise<Response> {
-        this.attemptsCount++;
-        if (this.attemptsCount >= this.config.attempts) {
-            throw new FatalError(failureMessage);
-        }
-
-        return new Promise<Response>((resolve) => {
-            const seconds = Math.pow(this.config.backoff, this.attemptsCount) * 1000;
-            setTimeout(() => {
-                resolve(this.processRequest(this.fetchParamsClone, this.previous));
-            }, seconds);
-
-        });
     }
 
     private isRetriableCode(statusCode: number): boolean {
