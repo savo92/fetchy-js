@@ -1,4 +1,5 @@
 module.exports = {
+    "testPathIgnorePatterns": ["<rootDir>/__tests__/fixtures.ts"],
     "transform": {
         "^.+\\.ts$": "<rootDir>/node_modules/ts-jest/preprocessor.js",
         "\\.js$": "<rootDir>/node_modules/babel-jest",
