@@ -18,3 +18,6 @@ Ship source code
 
 ## v0.0.6
 Make middlewares optional
+
+## v0.0.7
+Errors normalization by introducing `FetchyError`
