@@ -92,13 +92,6 @@ To continue the middlewares chain, just
 
 ## Fetch standard
 fetchy-js is not 100% [Fetch](https://fetch.spec.whatwg.org/)-compliant.
-When the retry middleware is enabled and [Response.ok](https://developer.mozilla.org/en-US/docs/Web/API/Response/ok)
-=== false, the middleware throws a TypeError.
-
-_I'll try to make fetchy-js as compliant as possible.
-Probably, I'll modify the logic to throw a custom Error when Response.ok === false and, to be Fetch-compliant,
-I'll create a special middleware which will convert this custom Error in a Response object, such as Fetch does
-when the status code isn't between 200-299 (but, when the retry logic is enabled, the last Response is returned)._
 
 fetchy-js uses isomorphic-fetch, which uses:
 - [node-fetch](https://github.com/bitinn/node-fetch/) on server side
@@ -111,6 +104,11 @@ Officially, GitHub's WHATWG Fetch polyfill is a polyfill that implements a subse
 node-fetch also isn't 100% Fetch specification-compliant.
 There's a list of [known differences](https://github.com/bitinn/node-fetch/blob/master/LIMITS.md)
 One of the main differences is that node-fetch throws custom FetchError. fetchy-js is hiding this difference by returning `TypeError` as the Fetch specification says.
+
+### What fetchy-js does to uniform the interface
+fetchy-js works also as an interface over node-fetch and Github's WHATWG Fetch polyfill.
+One of the most important thing it did is the normalization of the error raising. This means that it doesn't throw `TypeError` nor `FetchError`. Instead, it raises a `FetchyError`, when a network error is occurred or the HTTP status code of the reponse is < 200 or > 299.
+Moreover, when the retry logic is enabled, the `FetchyError` (that will be thrown after that all the attempts are failed) will contain ALL the failed Responses or `Error` occurred.
 
 ## License
 This library is licensed under the MIT license.
