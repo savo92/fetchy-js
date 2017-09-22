@@ -69,6 +69,9 @@ The config object has 3 properties:
 ### Environment middleware
 _coming soon_
 
+### Error interface normalization middleware
+_coming soon_
+
 ## Demo
 You can find a JS (with webpack) demo project here: https://github.com/savo92/demo-fetchy-js.
 Or a Node.js demo inside the `demo/` dir of this repository.
