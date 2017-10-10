@@ -69,8 +69,13 @@ The config object has 3 properties:
 ### Environment middleware
 _coming soon_
 
-### Error interface normalization middleware
-_coming soon_
+### Error interface normalization middleware (ErrorNormalizationMiddleware)
+A really simple middleware that doesn't need a config.
+It simply catches FetchyError and:
+ - If the error contains Errors, it raises a TypeError
+ - If the error contains failed Responses, it returns the Response
+This middleware has been created for those who want Fetchy to be more [Fetch](https://fetch.spec.whatwg.org/)-compliant.
+In case of repeated failures (i.e. with the retry logic enabled), it raises the last error or return the last response.
 
 ## Demo
 You can find a JS (with webpack) demo project here: https://github.com/savo92/demo-fetchy-js.

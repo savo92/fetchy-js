@@ -21,3 +21,6 @@ Make middlewares optional
 
 ## v0.0.7
 Errors normalization by introducing `FetchyError`
+
+## v0.0.8
+New Middleware to normalize FetchyErrors, to be Fetch-compliant.
