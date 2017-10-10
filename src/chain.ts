@@ -9,7 +9,6 @@ import {
 } from "lodash";
 
 import {
-    FetchyMiddleware,
     IFetchParams,
     IFetchyChain,
     IFetchyMiddleware,
@@ -32,10 +31,8 @@ export const validateMiddlewareDeclarations = (
 
     return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration) =>
 
-        has(middlewareDeclaration, "class")
-            && has(middlewareDeclaration, "config")
-            && middlewareDeclaration.class instanceof FetchyMiddleware,
-            // && middlewareDeclaration.config @TODO complete me!
+        has(middlewareDeclaration, "config")
+            && !isNil(middlewareDeclaration.class),
 
     ));
 

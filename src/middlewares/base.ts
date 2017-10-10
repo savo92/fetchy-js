@@ -20,7 +20,8 @@ export interface IFetchyMiddleware {
 }
 
 export interface IFetchyMiddlewareDeclaration {
-    class: IFetchyMiddleware;
+    // tslint:disable-next-line no-any
+    class: any;
     config: IFetchyMiddlewareConfig;
 }
 
