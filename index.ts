@@ -1,4 +1,5 @@
 import {
+    ErrorNormalizationMiddleware,
     fetchy,
     FetchyMiddleware,
     IFetchyConfig,
@@ -6,6 +7,7 @@ import {
 } from "./src/fetchy";
 
 export {
+    ErrorNormalizationMiddleware,
     FetchyMiddleware,
     IFetchyConfig,
     IFetchyRetryMiddlewareConfig,

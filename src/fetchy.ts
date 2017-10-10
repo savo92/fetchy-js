@@ -5,17 +5,13 @@ import {
     executeChain,
     IFetchyConfig,
 } from "./chain";
-import {
-    FetchyMiddleware,
-} from "./middlewares/base";
-import {
-    IFetchyRetryMiddlewareConfig,
-} from "./middlewares/retry";
-import {
-    customFetch,
-} from "./utils/fetch";
+import { FetchyMiddleware } from "./middlewares/base";
+import { ErrorNormalizationMiddleware } from "./middlewares/errorNormalization";
+import { IFetchyRetryMiddlewareConfig } from "./middlewares/retry";
+import { customFetch } from "./utils/fetch";
 
 export {
+    ErrorNormalizationMiddleware,
     FetchyMiddleware,
     IFetchyConfig,
     IFetchyRetryMiddlewareConfig,
