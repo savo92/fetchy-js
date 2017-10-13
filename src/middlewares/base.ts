@@ -19,9 +19,9 @@ export interface IFetchyMiddleware {
     processResponse(response: Promise<Response>): Promise<Response>;
 }
 
-export interface IFetchyMiddlewareDeclaration {
+export interface IFetchyMiddlewareDeclaration<T extends IFetchyMiddleware> {
     // tslint:disable-next-line no-any
-    class: any;
+    class: new () => T;
     config: IFetchyMiddlewareConfig;
 }
 
