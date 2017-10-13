@@ -11,6 +11,7 @@ import { FetchyError } from "../utils/error";
 import {
     FetchyMiddleware,
     IFetchParams,
+    IFetchyMiddleware,
     IFetchyMiddlewareConfig,
     IFetchyMiddlewareDeclaration,
 } from "./base";
@@ -118,7 +119,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
 
 export const getRetryMiddlewareDeclaration = (
     retry: IFetchyRetryMiddlewareConfig | boolean,
-): IFetchyMiddlewareDeclaration | null => {
+): IFetchyMiddlewareDeclaration<IFetchyMiddleware> | null => {
 
     if (retry === false) {
         return null;
