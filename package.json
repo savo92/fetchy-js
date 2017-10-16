@@ -1,8 +1,10 @@
 {
   "name": "fetchy-js",
-  "version": "0.0.8",
-  "main": "dist/index.js",
-  "types": "dist/indes.d.ts",
+  "version": "0.0.9",
+  "main": "lib/index.js",
+  "module": "lib-esm/index.js",
+  "browser": "_bundles/fetchy.js",
+  "types": "lib/index.d.ts",
   "author": "lorenzo.savini <fetchy-js@lorenzosavini.com>",
   "repository": {
     "type": "git",
@@ -10,31 +12,29 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@types/isomorphic-fetch": "^0.0.34",
-    "@types/lodash": "^4.14.74",
-    "babel-runtime": "^6.26.0",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "tslib": "^1.8.0"
   },
   "devDependencies": {
-    "@types/jest": "^20.0.8",
-    "babel-cli": "^6.26.0",
-    "babel-jest": "^21.0.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
+    "@types/isomorphic-fetch": "^0.0.34",
+    "@types/jest": "^21.1.2",
+    "@types/lodash": "^4.14.77",
+    "awesome-typescript-loader": "^3.2.3",
     "jest": "^21.0.1",
+    "jest-cli": "^21.2.1",
     "ts-jest": "^21.0.0",
     "tslint": "^5.7.0",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-immutable": "^4.1.0",
     "typescript": "^2.4.2",
-    "webpack": "^3.5.5"
+    "webpack": "^3.7.1"
   },
   "scripts": {
-    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/babel dist --out-dir dist",
-    "lint": "tslint --project tsconfig.json -c tslint.json -t verbose './*.ts' './src/**/*.ts'",
-    "prepublish": "npm run build",
+    "build": "npm run clean && tsc && tsc -m es6 --outDir lib-esm && webpack",
+    "clean": "rm -rf _bundles/ lib/ lib-esm/",
+    "lint": "tslint --project tsconfig.json -c tslint.json -t verbose './src/**/*.ts'",
+    "prepare": "npm run build",
     "test": "jest --config jest.config.js",
     "test:watch": "jest --config jest.config.js --watch",
     "test-demo": "npm run build && node demo/basic.js"

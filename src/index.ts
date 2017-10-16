@@ -35,3 +35,9 @@ export const fetchy = async (
     return customFetch(input, init);
 
 };
+
+export const fetch = async (
+    input: RequestInfo,
+    init: RequestInit,
+    fetchyConfig?: IFetchyConfig,
+): Promise<Response> => fetchy(input, init, fetchyConfig);

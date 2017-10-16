@@ -2,7 +2,7 @@ import {
     ErrorNormalizationMiddleware,
     fetchy,
     IFetchyRetryMiddlewareConfig,
-} from "../src/fetchy";
+} from "../src/index";
 import { FetchyError } from "../src/utils/error";
 
 describe("Error normalization without retry", () => {

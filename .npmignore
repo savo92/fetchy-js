@@ -1,6 +1,8 @@
 __tests__/
 demo/
-*.log
+src/
 .travis.yml
+jasmineSetup.js
 jest.config.js
 tslint.json
+*.log

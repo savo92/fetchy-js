@@ -1,4 +1,4 @@
-const fetch = require("../dist/index").fetch;
+const fetchy = require("../lib/index").fetchy;
 
 fetch("https://something.ext", {}, { middlewares: [], retry: true })
     .then((r) => {

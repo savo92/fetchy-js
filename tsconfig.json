@@ -1,13 +1,16 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "declaration": true,
-        "outDir": "dist/",
-        "rootDir": ".",
-        "sourceMap": true,
+        "importHelpers": true,
+        "inlineSources": true,
+        "lib": ["dom", "es2015"],
+        "moduleResolution": "node",
+        "outDir": "lib",
+        "removeComments": true,
         "strictNullChecks": true,
-        "target": "es6"
+        "sourceMap": true,
+        "target": "es5"
     },
     "exclude": ["node_modules"],
-    "files": ["index.ts"]
+    "files": ["src/index.ts"]
 }

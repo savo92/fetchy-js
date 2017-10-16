@@ -1,4 +1,6 @@
 .idea/
 node_modules/
-dist/
+_bundles/
+lib-esm/
+lib/
 *.log

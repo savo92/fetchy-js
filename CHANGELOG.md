@@ -24,3 +24,6 @@ Errors normalization by introducing `FetchyError`
 
 ## v0.0.8
 New Middleware to normalize FetchyErrors, to be Fetch-compliant.
+
+## v0.0.9
+Remove Babel and start using Webpack, compile TS to ES6, ES5 and UMD bundle. Stop shipping `src` in NPM package.
