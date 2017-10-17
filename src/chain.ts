@@ -21,15 +21,15 @@ import {
 } from "./middlewares/retry";
 
 export interface IFetchyConfig {
-    middlewares?: Array<IFetchyMiddlewareDeclaration<IFetchyMiddleware>>;
+    middlewares?: IFetchyMiddlewareDeclaration[];
     retry: IFetchyRetryMiddlewareConfig | boolean;
 }
 
 export const validateMiddlewareDeclarations = (
-    middlewares: Array<IFetchyMiddlewareDeclaration<IFetchyMiddleware>>,
+    middlewares: IFetchyMiddlewareDeclaration[],
 ): boolean => {
 
-    return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration<IFetchyMiddleware>) =>
+    return every(map(middlewares, (middlewareDeclaration: IFetchyMiddlewareDeclaration) =>
 
         has(middlewareDeclaration, "config")
             && !isNil(middlewareDeclaration.class),
@@ -38,9 +38,7 @@ export const validateMiddlewareDeclarations = (
 
 };
 
-const validateFetchyConfig = (
-    fetchyConfig: IFetchyConfig,
-): Array<IFetchyMiddlewareDeclaration<IFetchyMiddleware>> | null => {
+const validateFetchyConfig = (fetchyConfig: IFetchyConfig): IFetchyMiddlewareDeclaration[] | null => {
 
     if (isNil(fetchyConfig.middlewares)) {
         return [];
@@ -69,9 +67,9 @@ const instanceFetchyMiddleware = (
 };
 
 const buildChainRings = (
-    middlewareDeclaration: IFetchyMiddlewareDeclaration<IFetchyMiddleware>,
+    middlewareDeclaration: IFetchyMiddlewareDeclaration,
     nextRing: IFetchyMiddleware | null,
-    remainingMiddlewareDeclarations: Array<IFetchyMiddlewareDeclaration<IFetchyMiddleware>>,
+    remainingMiddlewareDeclarations: IFetchyMiddlewareDeclaration[],
 ): IFetchyMiddleware => {
 
     const ring = instanceFetchyMiddleware(
