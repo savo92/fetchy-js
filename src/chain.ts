@@ -109,7 +109,7 @@ export const buildChain = (fetchyConfig: IFetchyConfig): IFetchyChain | null  =>
 
     return {
         start: buildChainRings(
-            first(reversedMiddlewareDeclarations),
+            first(reversedMiddlewareDeclarations)!,
             null,
             drop(reversedMiddlewareDeclarations),
         ),
