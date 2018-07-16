@@ -45,7 +45,6 @@
         "strict-boolean-expressions": true,
         "strict-type-predicates": true,
         "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
-        "typedef": [true, "call-signature"],
-        "typeof-compare": true
+        "typedef": [true, "call-signature"]
     }
 }
