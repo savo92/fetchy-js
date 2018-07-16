@@ -30,3 +30,6 @@ Remove Babel and start using Webpack, compile TS to ES6, ES5 and UMD bundle. Sto
 
 ## v0.0.10
 Expose `FetchyError` type.
+
+## v0.0.11
+New Middleware for better Raven (the Sentry js client) integration.
