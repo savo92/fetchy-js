@@ -7,6 +7,7 @@ import {
 } from "./chain";
 import { FetchyMiddleware } from "./middlewares/base";
 import { ErrorNormalizationMiddleware } from "./middlewares/errorNormalization";
+import { FetchyRavenMiddleware, IFetchyRavenMiddlewareConfig } from "./middlewares/raven";
 import { IFetchyRetryMiddlewareConfig } from "./middlewares/retry";
 import { FetchyError } from "./utils/error";
 import { customFetch } from "./utils/fetch";
@@ -15,7 +16,9 @@ export {
     ErrorNormalizationMiddleware,
     FetchyError,
     FetchyMiddleware,
+    FetchyRavenMiddleware,
     IFetchyConfig,
+    IFetchyRavenMiddlewareConfig,
     IFetchyRetryMiddlewareConfig,
 };
 
