@@ -2,6 +2,9 @@ CHANGELOG
 =========
 
 ## v0.0.11
+Improve FetchyError messages to contain the URL of failed request.
+
+## v0.0.11
 New Middleware for better Raven (the Sentry js client) integration.
 
 ## v0.0.10
