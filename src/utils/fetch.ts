@@ -9,7 +9,7 @@ export const customFetch = async (input: RequestInfo, init?: RequestInit) =>
         .then((response: Response): Response => {
             if (!response.ok) {
                 throw new FetchyError(
-                    `Fetch request failed with status ${response.status}`,
+                    `Fetch request failed with status ${response.status} (${input})`,
                     [response],
                 );
             }
@@ -22,7 +22,7 @@ export const customFetch = async (input: RequestInfo, init?: RequestInit) =>
             }
 
             throw new FetchyError(
-                "An error has been catched",
+                `An error has been catched (${input})`,
                 undefined,
                 [error],
             );

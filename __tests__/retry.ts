@@ -6,7 +6,7 @@ import { FetchyError } from "../src/utils/error";
 
 describe("Test retry logic", () => {
 
-    test("Failure with client error", () => {
+    test("Failure with client error", async () => {
         expect.assertions(2);
 
         const retryConfig: IFetchyRetryMiddlewareConfig = {
@@ -18,13 +18,13 @@ describe("Test retry logic", () => {
 
         return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: retryConfig })
             .catch((e) => {
-                expect(e.message).toMatch("Too many failures.");
+                expect(e.message).toMatch("Too many failures (http://lorenzosavini.com/404)");
                 expect(e).toBeInstanceOf(FetchyError);
             });
 
     });
 
-    test("Failure with network error", () => {
+    test("Failure with network error", async () => {
         expect.assertions(2);
 
         const retryConfig: IFetchyRetryMiddlewareConfig = {
@@ -36,7 +36,7 @@ describe("Test retry logic", () => {
 
         return fetchy("http://something.ext", {}, { middlewares: [], retry: retryConfig })
             .catch((e) => {
-                expect(e.message).toMatch("Too many failures.");
+                expect(e.message).toMatch("Too many failures (http://something.ext)");
                 expect(e).toBeInstanceOf(FetchyError);
             });
 
@@ -46,18 +46,18 @@ describe("Test retry logic", () => {
 
 describe("Default retry configuration", () => {
 
-    test("Failure with client error", () => {
+    test("Failure with client error", async () => {
         expect.assertions(2);
 
         return fetchy("http://lorenzosavini.com/404", {}, { middlewares: [], retry: true })
             .catch((e) => {
-                expect(e.message).toMatch("Fetch request failed with status 404");
+                expect(e.message).toMatch("Fetch request failed with status 404 (http://lorenzosavini.com/404)");
                 expect(e).toBeInstanceOf(FetchyError);
             });
 
     });
 
-    test("Failure with network error", () => {
+    test("Failure with network error", async () => {
         expect.assertions(1);
 
         return fetchy("http://something.ext", {}, { middlewares: [], retry: true })
