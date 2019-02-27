@@ -13,7 +13,7 @@ export interface IFetchyRavenMiddlewareConfig extends IFetchyMiddlewareConfig {
     ravenClient: any;
 }
 
-export class IFetchyRavenMiddleware extends FetchyMiddleware {
+export class FetchyRavenMiddleware extends FetchyMiddleware {
     protected config: IFetchyRavenMiddlewareConfig;
 
     private errorCategory: string = "fetchy-js_response_captured";
@@ -32,11 +32,11 @@ export class IFetchyRavenMiddleware extends FetchyMiddleware {
         return promise0
             .catch((e: FetchyError) => {
                 if (e.hasErrors()) {
-                    e.errors.forEach((error) =>
+                    e.errors!.forEach((error) =>
                         this.captureErrorBreadcrumb(error));
                 }
                 if (e.hasResponses()) {
-                    e.responses.forEach((response) =>
+                    e.responses!.forEach((response) =>
                         this.captureResponseBreadcrumb(response.clone()));
                 }
 
