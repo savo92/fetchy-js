@@ -81,7 +81,7 @@ export class FetchyRetryMiddleware extends FetchyMiddleware {
                     this.attemptsCount++;
                     if (this.attemptsCount >= this.config.attempts) {
                         throw new FetchyError(
-                            "Too many failures.",
+                            `Too many failures (${this.fetchParamsClone.input})`,
                             this.failedResponses,
                             this.errors,
                         );
