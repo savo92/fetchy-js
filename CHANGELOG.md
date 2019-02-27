@@ -1,7 +1,10 @@
 CHANGELOG
 =========
 
-## v0.0.11
+## v0.0.13
+Fix Raven middleware classname + expose Raven stuff in the index.ts
+
+## v0.0.12
 Improve FetchyError messages to contain the URL of failed request.
 
 ## v0.0.11
